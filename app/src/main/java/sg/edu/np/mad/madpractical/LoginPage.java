@@ -22,26 +22,28 @@ public class LoginPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
 
-        EditText enteredusername = (EditText) findViewById(R.id.editTextText);
-        EditText enteredpassword = (EditText) findViewById(R.id.editTextText2);
+        EditText username = (EditText) findViewById(R.id.editTextText);
+        EditText password = (EditText) findViewById(R.id.editTextText2);
         Button submit = (Button)findViewById(R.id.login);
 
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseDatabase database = FirebaseDatabase.getInstance("https://mad-practical-6---sherlena-default-rtdb.asia-southeast1.firebasedatabase.app/");
+                FirebaseDatabase database = FirebaseDatabase.getInstance("https://console.firebase.google.com/project/mad-practical-6-23eda/database/mad-practical-6-23eda-default-rtdb/data/~2F");
                 DatabaseReference myRef = database.getReference("Users");
+//                UserName: ew875
+//                Password: pawn123
+                String name = username.getText().toString();
+                String pass = password.getText().toString();
 
-                String username = enteredusername.getText().toString();
-                String password = enteredpassword.getText().toString();
+                myRef.child(name).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
 
-                myRef.child(username).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (task.isSuccessful()) {
                             String correctpassword = task.getResult().child("password").getValue(String.class);
-                            if (correctpassword != null && correctpassword.equals(password)) {
+                            if (correctpassword != null && correctpassword.equals(pass)) {
                                 Intent i1 = new Intent(LoginPage.this, ListActivity.class);
                                 Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_LONG).show();
                                 startActivity(i1);

@@ -12,12 +12,16 @@ import java.util.Random;
 public class dbhandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "Users.db";
+    public static final String TABLE_USERS = "Users";
+    public static final String COLUMN_USERNAME = "Name";
+    public static final String COLUMN_USERDESCRIPTION = "Description";
+    public static final String COLUMN_USERID = "ID";
+    public static final String COLUMN_USERFOLLOWED = "Followed";
 
     public dbhandler(Context context, String name,
                      SQLiteDatabase.CursorFactory factory,
-                     int version)
-    {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
+                     int version){
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -58,14 +62,26 @@ public class dbhandler extends SQLiteOpenHelper {
             db.close();
         }
     }
-
     @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE IF EXISTS " + "Users");
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         onCreate(db);
     }
+    public void insertUser(User user){
+        ContentValues userValues = new ContentValues();
 
-    public ArrayList<User> getUsers(){
+        userValues.put(COLUMN_USERNAME, user.getName());
+        userValues.put(COLUMN_USERDESCRIPTION, user.getDescription());
+        userValues.put(COLUMN_USERID, user.getId());
+        userValues.put(COLUMN_USERFOLLOWED, user.isFollowed());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        long val = db.insert(TABLE_USERS, null, userValues);
+        db.close();
+    }
+
+    public ArrayList<User> getUser(){
         ArrayList<User> userList = new ArrayList<User>();
         String query = "SELECT * FROM Users";
         SQLiteDatabase db = this.getReadableDatabase();
@@ -83,7 +99,6 @@ public class dbhandler extends SQLiteOpenHelper {
         db.close();
         return userList;
     }
-
     public void updateUser(User usertoupdate){
         ContentValues values = new ContentValues();
         SQLiteDatabase db = this.getWritableDatabase();

@@ -13,53 +13,54 @@ import android.widget.Toast;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+
     final String TITLE = "Main Activity";
-    User u = new User();
-    dbhandler dbhandler = new dbhandler(this, null, null, 1);
-    Intent intent = getIntent();
-
-    int place = intent.getIntExtra("index", -1);
-
-    User targetuser = UserAdapter.data.get(place);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.v(TITLE, "Create!");
-        User myUser =  new User();
-        myUser.setFollowed(false);
-        TextView change = findViewById(R.id.helloworld);
-        change.setText("MAD " + getRandomNumber());
-        Button message = (Button) findViewById(R.id.button);
-        message.setOnClickListener(view -> {
-            Intent messager = new Intent (MainActivity.this, MessageGroup.class);
-            startActivity(messager);}
-                );
+        TextView Name = (TextView) findViewById((R.id.name));
+        TextView Description = (TextView) findViewById((R.id.description));
 
-        Button myfollowbutton = findViewById(R.id.button2);
-        myfollowbutton.setOnClickListener(view -> {
-            boolean bool = myUser.isFollowed();
-            bool = !bool;
-            myUser.setFollowed(bool);
-            Log.v(TITLE, "on Destroy....");
-            if (myUser.isFollowed() == Boolean.FALSE)
-            {
-                dbhandler.updateUser(targetuser);
-                myfollowbutton.setText("Follow");
-                Toast.makeText(getApplicationContext(),"Followed",Toast.LENGTH_SHORT).show();
-            }
-            else
-            {
-                myfollowbutton.setText("Unfollow");
-                Toast.makeText(getApplicationContext(),"Unfollowed",Toast.LENGTH_SHORT).show();
-            }
+        Button followButton = (Button) findViewById(R.id.button2);
 
-            Log.v(TITLE, "on Destroy....");
+        Intent i2 = getIntent();
+//        String username = i2.getStringExtra("Username");
+//        String description = i2.getStringExtra("Description");
+//        boolean followed = i2.getBooleanExtra("Followed", false);
+//        List<User> userList = (List<User>) i2.getSerializableExtra("UserList");
+        int place = i2.getIntExtra("index", -1);
+
+        User targetuser = UserAdapter.data.get(place);
+
+        Name.setText(targetuser.name);
+        Description.setText(targetuser.description);
+        if (targetuser.followed == true){
+            followButton.setText("Unfollow");
+        }
+        else {
+            followButton.setText("Follow");
+        }
+
+        dbhandler dbquerymachine = new dbhandler(this, null, null, 1);
+
+        followButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (targetuser.followed == true){
+                    targetuser.followed = false;
+                    dbquerymachine.updateUser(targetuser);
+                    followButton.setText("Follow");
+                    Toast.makeText(getApplicationContext(), "Unfollowed", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    targetuser.followed = true;
+                    dbquerymachine.updateUser(targetuser);
+                    followButton.setText("Unfollow");
+                    Toast.makeText(getApplicationContext(), "Followed", Toast.LENGTH_SHORT).show();
+                }
+            }
         });
-    }
-    private int getRandomNumber(){
-        Random random = new Random();
-        int randomValue = random.nextInt(100000);
-        return randomValue;
     }
 }

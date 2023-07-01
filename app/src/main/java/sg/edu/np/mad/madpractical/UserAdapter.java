@@ -61,9 +61,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
                         view.getContext().startActivity(profile);
                     }
                 });
-                builder.setNegativeButton("Close", null);
-                android.app.AlertDialog alert = builder.create();
-                alert.show();
+                builder.setNegativeButton("Close", new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+                builder.show();
             }
         });
     }
@@ -71,8 +74,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
     public int getItemCount() {
         return data.size();
     }
+}
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+public class ViewHolder extends RecyclerView.ViewHolder{
         TextView text1, text2;
         ImageView image, bigImage;
         public ViewHolder(@NonNull View itemView){
