@@ -74,9 +74,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
     public int getItemCount() {
         return data.size();
     }
-}
 
-public class ViewHolder extends RecyclerView.ViewHolder{
+public class ViewHolder extends RecyclerView.ViewHolder {
         TextView text1, text2;
         ImageView image, bigImage;
         public ViewHolder(@NonNull View itemView){

@@ -12,5 +12,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "mad23-practical-6---storage-ew875"
+rootProject.name = "MADExercise"
 include ':app'
+include ':Exercise6'
